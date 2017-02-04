@@ -16,7 +16,9 @@ A távnál és a szintnél csak azokat az értékeket fogadtam el, melyek értel
 
 Az elemzésből kizártam azokat a túrákat, amelyek nem voltak gyalogosan teljesíthetőek (a jellegben nem szerepelt a ,,Gy’’ betű), amelyekhez nem volt tájegység, táv vagy szint (ez utóbbi kettő a fenti értelemben) megadva, amelyiknél a megadott táv 0 méter volt, és azokat, amelyek külföldön zajlottak, akár csak részben is, tehát külföldi helyszín[1] is szerepelt a tájegységek között.
 
-Az elemzés `R` statisztikai környezet alatt készült, a vizualizáció `lattice` csomaggal, a jelentés pedig `knitr`-rel, `RMarkdown` formátumban. A kódot úgy írtam meg, hogy a lehető legáltalánosabb legyen (így például könnyen alkalmazható legyen más évekre is). A teljes forráskódot, és a reprodukálható jelentést közzétettem `Github`-on, a következő repozitóriumban: TODO.
+Az elemzés `R` statisztikai környezet alatt készült, a vizualizáció `lattice` csomaggal, a jelentés pedig `knitr`-rel, `RMarkdown` formátumban. A kódot úgy írtam meg, hogy a lehető legáltalánosabb legyen (így például könnyen alkalmazható legyen más évekre is). A teljes forráskódot, és a reprodukálható jelentést közzétettem `Github`-on, a következő repozitóriumban: <https://github.com/tamas-ferenci/TTT_TuraStatisztika>.
+
+A jelentés elérhető PDF formátumban a következő címen: <https://github.com/tamas-ferenci/TTT_TuraStatisztika/blob/master/TTT_TuraStatisztika_Report.pdf> (letölthető a jobb oldalt felül lévő Download feliratú gombbal).
 
 Táv, szint- és hegységadatok egyváltozós elemzése
 -------------------------------------------------
