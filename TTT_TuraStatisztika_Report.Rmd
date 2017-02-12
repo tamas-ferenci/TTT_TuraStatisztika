@@ -7,7 +7,7 @@ output:
     pandoc_args: ["--smart"]
   pdf_document: default
 header-includes: \usepackage{subfig}
-knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_format = "all" ) })
+knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_format = "all", clean = FALSE ) })
 ---
 
 ```{r setup, include=FALSE}
