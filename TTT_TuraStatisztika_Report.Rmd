@@ -5,8 +5,9 @@ date: '`r format(Sys.time(), "%Y.\\ %B %d.")`'
 output:
   github_document:
     pandoc_args: ["--smart"]
-header-includes:
-  - \usepackage{subfig}
+  pdf_document: default
+header-includes: \usepackage{subfig}
+knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_format = "all" ) })
 ---
 
 ```{r setup, include=FALSE}
@@ -19,9 +20,9 @@ A magyar teljesítménytúrák adatainak elemzése nem nehéz feladat, ugyanis a
 
 Az egyetlen ,,számítástechnikai'' nehézség a túra tájegységének meghatározása: sajnos az Excel-tábla (nem tudom milyen oknál fogva, de ilyen szempontból nagyon peches módon) egyetlen dolgot nem tartalmaz, a tájegységet. A probléma megoldását az tette lehetővé, hogy az online túranaptár viszont megadja minden túrához a hegységet, és szerencsére az ott szereplő túranév pontosan ugyanaz, mint ami az Excel-táblában is megjelenik. Ilyen módon, számítógéppel letöltve a túranaptárat, össze tudtam kapcsolni a túrákat a tájegységekkel (is).
 
-A távnál és a szintnél csak azokat az értékeket fogadtam el, melyek értelmes számot tartalmaztak, így azok a túrák, ahol például az intervallum jellegű megadás (,,20-25 km'') vagy pontatlan érték (,,kb. 15 km'') szerepelt, nem jelennek meg a mostani elemzésekben. A tájegységek kapcsán egy definíciós problémába futottam: bizonyos túrákhoz több hegység is fel van sorolva, mert a túra útvonala mindent érinti, így adódik a kérdés, hogy ezeket a túrákat melyik hegységhez soroljam az elemzésekben\dots{}? Jobb híján úgy döntöttem, hogy ilyen esetekben a túrát *mindegyik* tájegységhez hozzárendelem. (Így egy túra többször is megjelenik az ilyen elemzésekben; annyiszor, ahány hegységet érint.) Ennek a módszernek nyilvánvaló hátránya ez a többszöröződés, ám jobbat nem tudtam tenni.
+A távnál és a szintnél csak azokat az értékeket fogadtam el, melyek értelmes számot tartalmaztak, így azok a túratávok, ahol például az intervallum jellegű megadás (,,20-25 km'') vagy pontatlan érték (,,kb. 15 km'') szerepelt, nem jelennek meg a mostani elemzésekben. A tájegységek kapcsán egy definíciós problémába futottam: bizonyos túrákhoz több hegység is fel van sorolva, mert a túra útvonala mindent érinti, így adódik a kérdés, hogy ezeket a túrákat melyik hegységhez soroljam az elemzésekben\dots{}? Jobb híján úgy döntöttem, hogy ilyen esetekben a túrát *mindegyik* tájegységhez hozzárendelem. (Így egy túra többször is megjelenik az ilyen elemzésekben; annyiszor, ahány hegységet érint.) Ennek a módszernek nyilvánvaló hátránya ez a többszöröződés, ám jobbat nem tudtam tenni.
 
-Az elemzésből kizártam azokat a túrákat, amelyek nem voltak gyalogosan teljesíthetőek (a jellegben nem szerepelt a ,,Gy'' betű), amelyekhez nem volt tájegység, táv vagy szint (ez utóbbi kettő a fenti értelemben) megadva, amelyiknél a megadott táv 0 méter volt, és azokat, amelyek külföldön zajlottak, akár csak részben is, tehát külföldi helyszín[^1] is szerepelt a tájegységek között.
+Az elemzésből kizártam azokat a túratávokat, amelyek nem voltak gyalogosan teljesíthetőek (a jellegben nem szerepelt a ,,Gy'' betű), amelyekhez nem volt tájegység, táv vagy szint (ez utóbbi kettő a fenti értelemben) megadva, amelyiknél a megadott táv 0 méter volt, és azokat, amelyek külföldön zajlottak, akár csak részben is, tehát külföldi helyszín[^1] is szerepelt a tájegységek között.
 
 [^1]: A következő tájegységek voltak a külföldiek: Ausztria, Bihar-hegység, Csehország, Erdély, Horvátország, Lengyelország, Németország, Románia, Szerbia, Szlovákia, Szlovénia, Ukrajna (Kárpátalja).
 
@@ -67,7 +68,7 @@ RawData2016 <- transform( RawData2016, meredekseg = szint/tav )
 
 ## Táv, szint- és hegységadatok egyváltozós elemzése
 
-Az adatbázis eredetileg `r nr1` túrát tartalmaz. Ebből a nem gyalogos túrákat kizárva marad `r nr2`, a hegység nélkülieket és külföldieket kizárva `r nr3`, táv vagy szint nélkülieket és 0 távúakat kizárva pedig `r nr4`.
+Az adatbázis eredetileg `r nr1` túratávot tartalmaz. Ebből a nem gyalogos túratávokat kizárva marad `r nr2`, a hegység nélkülieket és külföldieket kizárva `r nr3`, táv vagy szint nélkülieket és 0 távúakat kizárva pedig `r nr4`.
 
 A túrák megoszlását tájegység szerint -- egyelőre még a bevezetőben írt összevonás nélkül -- a következő ábra mutatja:
 
@@ -94,7 +95,7 @@ barchart( factor( RawData2016hegyseg$Hegyseg, levels = sort( unique( RawData2016
           xlab = "Túrák száma [db]" )
 ```
 
-A túrák távjainak eloszlását a következő ábra mutatja (hisztogramon). Mivel van egy-két extrém hosszú túra, melyek miatt a legtöbb túrát tartalmazó régió elég kicsire össze lenne nyomva, így a jobb oldalon külön látható a 100 km-nél rövidebb túrákra az eloszlás:
+A túratávok hosszainak eloszlását a következő ábra mutatja (hisztogramon). Mivel van egy-két extrém hosszú túratáv, melyek miatt a legtöbb túrát tartalmazó régió elég kicsire össze lenne nyomva, így a jobb oldalon külön látható a 100 km-nél rövidebb túratávokra az eloszlás:
 
 ```{r taveloszlas, out.width='.49\\linewidth', fig.align='default'}
 histogram( RawData2016$tav, xlab = "Táv [km]", ylab = "Megoszlás [%]",
@@ -104,7 +105,7 @@ histogram( ~tav, data = RawData2016, subset = tav<100, xlab = "Táv [km]", ylab 
                                                       prop = 0.04 )[ 2 ] ) )
 ```
 
-Konkrétan kiemelve, számszerűen a legrövidebb túrák:
+Konkrétan kiemelve, számszerűen a legrövidebb túratávok:
 
 ```{r tavminimumok}
 tab <- head( RawData2016[ order( RawData2016$tav ), c( 5, 4, 6, 7, 24, 21 ) ], 5 )
@@ -124,7 +125,7 @@ colnames( tab ) <- c( "Túra neve", "Dátum", "Táv [km]", "Szint [m]", "Mered. 
 pander( tab, digits = 1, split.table = Inf )
 ```
 
-A túrák szintjeinek eloszlása, hasonlóan jobb oldalon csak a 3000 méternél kisebb szintemelkedésű túrák eloszlása ábrázolva:
+A túratávok szintjeinek eloszlása, hasonlóan jobb oldalon csak a 3000 méternél kisebb szintemelkedésű túratávok eloszlása ábrázolva:
 
 ```{r szinteloszlas, out.width='.49\\linewidth', fig.align='default'}
 histogram( RawData2016$szint, xlab = "Szint [m]", ylab = "Megoszlás [%]",
@@ -134,7 +135,7 @@ histogram( ~szint, data = RawData2016, subset = szint<3000, xlab = "Szint [m]", 
                                                       prop = 0.04 )[ 2 ] ) )
 ```
 
-A legnagyobb szintemelkedésű túrák (a legalacsonyabbakat nincs értelme kitáblázni, hiszen több tucat van, aminél ez nulla):
+A legnagyobb szintemelkedésű túratávok (a legalacsonyabbakat nincs értelme kitáblázni, hiszen több tucat van, aminél ez nulla):
 
 ```{r szintmaximumok}
 tab <- tail( RawData2016[ order( RawData2016$szint ), c( 5, 4, 6, 7, 24, 21 ) ], 5 )
@@ -146,9 +147,9 @@ pander( tab, digits = 1, split.table = Inf )
 
 ## Táv- és szintadatok együttes elemzése
 
-Érdekes kérdés annak vizsgálata, hogy a táv és a szintemelkedés hogyan oszlik meg, ha *együtt* vizsgáljuk őket, nem külön-külön, tehát ha egyszerre vesszük figyelembe, hogy mennyi egy túra távja *és* szintje. Annál is inkább, mert ezek nagyon természetesen adnak egy új paramétert (figyelmes szemlélő már az előbbi táblázatokban is észrevehette őket): a túra meredekségét, ami a szint és a táv hányadosa. (Ha az előbbit méterben mérjük, utóbbit kilométerben, akkor a meredekséget ezrelékben (‰) kapjuk meg.) Ez ilyen formában egyfajta ,,átlagos'' meredekség, ami messze nem tökéletes mutató, hiszen a valóságban az is számít ugyancsak, hogy az emelkedések hogyan oszlanak meg a túra útvonalán, de ezekből az adatokból ez a legjobb, amit ki tudunk számolni.
+Érdekes kérdés annak vizsgálata, hogy a táv és a szintemelkedés hogyan oszlik meg, ha *együtt* vizsgáljuk őket, nem külön-külön, tehát ha egyszerre vesszük figyelembe, hogy mennyi egy túratáv távja *és* szintje. Annál is inkább, mert ezek nagyon természetesen adnak egy új paramétert (figyelmes szemlélő már az előbbi táblázatokban is észrevehette őket): a túratáv meredekségét, ami a szint és a táv hányadosa. (Ha az előbbit méterben mérjük, utóbbit kilométerben, akkor a meredekséget ezrelékben (‰) kapjuk meg.) Ez ilyen formában egyfajta ,,átlagos'' meredekség, ami messze nem tökéletes mutató, hiszen a valóságban az is számít ugyancsak, hogy az emelkedések hogyan oszlanak meg a túra útvonalán, de ezekből az adatokból ez a legjobb, amit ki tudunk számolni.
 
-A táv- és szintadatok egy kézenfekvő ábrázolása a szóródási diagram: minden pont egy túra, a vízszintes koordinátája a távja, a függőleges a szintje. Íme ez a 2016-os magyar teljesítménytúra-naptárra (az áttekinthetőség kedvéért a korábban használt 100 km-es és 3000 méteres szűkítéssel):
+A táv- és szintadatok egy kézenfekvő ábrázolása a szóródási diagram: minden pont egy túratáv, a vízszintes koordinátája a távja, a függőleges a szintje. Íme ez a 2016-os magyar teljesítménytúra-naptárra (az áttekinthetőség kedvéért a korábban használt 100 km-es és 3000 méteres szűkítéssel):
 
 ```{r tavszintegyutt, fig.asp=1}
 xyplot( szint ~ tav, data = RawData2016, subset = szint<3000&tav<100, xlim = c( 0, 110 ), ylim = c( 0, 3200 ),
@@ -175,7 +176,7 @@ histogram( RawData2016$meredekseg, xlab = "Meredekség [‰]", ylab = "Megoszlá
                                                       prop = 0.04 )[ 2 ] ))
 ```
 
-A legmeredekebb túrák (a legkevésbé meredekek ezúttal sem túl érdekesek):
+A legmeredekebb túratávok (a legkevésbé meredekek ezúttal sem túl érdekesek):
 
 ```{r meredeksegmaximumok1}
 tab <- tail( RawData2016[ order( RawData2016$meredekseg ), c( 5, 4, 6, 7, 24, 21 ) ], 5 )
@@ -185,7 +186,7 @@ colnames( tab ) <- c( "Túra neve", "Dátum", "Táv [km]", "Szint [m]", "Mered. 
 pander( tab, digits = 1, split.table = Inf )
 ```
 
-Látható, hogy ezek jórészt igen rövid túrák, így jöhetett ki az extrém meredekség, ezért érdekes lehet megnézni a legmeredekebb túrákat csak azon túrák körében, melyek legalább 10 km hosszúak:
+Látható, hogy ezek jórészt igen rövid túrák, így jöhetett ki az extrém meredekség, ezért érdekes lehet megnézni a legmeredekebb túrákat csak azon túratávok körében, melyek legalább 10 km hosszúak:
 
 ```{r meredeksegmaximumok2}
 tab <- subset( RawData2016, tav > 10)
@@ -209,7 +210,7 @@ bwplot( factor( Hegyseg, levels = sort( unique( Hegyseg ), decreasing = TRUE ) )
         xlim = c( -5, 110 ), xlab = "Táv [km]" )
 ```
 
-A túrák szintemelkedéseinek eloszlása boxploton, tájegység szerint (itt is 3000 méterre szűkítve az ábrát):
+A túratávok szintemelkedéseinek eloszlása boxploton, tájegység szerint (itt is 3000 méterre szűkítve az ábrát):
 
 ```{r szinthegysegszerint, fig.height=6}
 bwplot( factor( Hegyseg, levels = sort( unique( Hegyseg ), decreasing = TRUE ) ) ~ szint, data = RawData2016hegyseg,

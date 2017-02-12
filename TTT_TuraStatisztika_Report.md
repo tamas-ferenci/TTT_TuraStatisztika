@@ -1,9 +1,7 @@
 A 2016-os magyar teljesítménytúrák adatainak elemzése
 ================
 Ferenci Tamás, <tamas.ferenci@medstat.hu>
-2017. február 04.
-
-
+2017. február 12.
 
 Bevezető gondolatok és számítástechnikai megjegyzések
 -----------------------------------------------------
@@ -12,9 +10,9 @@ A magyar teljesítménytúrák adatainak elemzése nem nehéz feladat, ugyanis a
 
 Az egyetlen ,,számítástechnikai’’ nehézség a túra tájegységének meghatározása: sajnos az Excel-tábla (nem tudom milyen oknál fogva, de ilyen szempontból nagyon peches módon) egyetlen dolgot nem tartalmaz, a tájegységet. A probléma megoldását az tette lehetővé, hogy az online túranaptár viszont megadja minden túrához a hegységet, és szerencsére az ott szereplő túranév pontosan ugyanaz, mint ami az Excel-táblában is megjelenik. Ilyen módon, számítógéppel letöltve a túranaptárat, össze tudtam kapcsolni a túrákat a tájegységekkel (is).
 
-A távnál és a szintnél csak azokat az értékeket fogadtam el, melyek értelmes számot tartalmaztak, így azok a túrák, ahol például az intervallum jellegű megadás (,,20-25 km’‘) vagy pontatlan érték (,,kb. 15 km’’) szerepelt, nem jelennek meg a mostani elemzésekben. A tájegységek kapcsán egy definíciós problémába futottam: bizonyos túrákhoz több hegység is fel van sorolva, mert a túra útvonala mindent érinti, így adódik a kérdés, hogy ezeket a túrákat melyik hegységhez soroljam az elemzésekben? Jobb híján úgy döntöttem, hogy ilyen esetekben a túrát *mindegyik* tájegységhez hozzárendelem. (Így egy túra többször is megjelenik az ilyen elemzésekben; annyiszor, ahány hegységet érint.) Ennek a módszernek nyilvánvaló hátránya ez a többszöröződés, ám jobbat nem tudtam tenni.
+A távnál és a szintnél csak azokat az értékeket fogadtam el, melyek értelmes számot tartalmaztak, így azok a túratávok, ahol például az intervallum jellegű megadás (,,20-25 km’‘) vagy pontatlan érték (,,kb. 15 km’’) szerepelt, nem jelennek meg a mostani elemzésekben. A tájegységek kapcsán egy definíciós problémába futottam: bizonyos túrákhoz több hegység is fel van sorolva, mert a túra útvonala mindent érinti, így adódik a kérdés, hogy ezeket a túrákat melyik hegységhez soroljam az elemzésekben? Jobb híján úgy döntöttem, hogy ilyen esetekben a túrát *mindegyik* tájegységhez hozzárendelem. (Így egy túra többször is megjelenik az ilyen elemzésekben; annyiszor, ahány hegységet érint.) Ennek a módszernek nyilvánvaló hátránya ez a többszöröződés, ám jobbat nem tudtam tenni.
 
-Az elemzésből kizártam azokat a túrákat, amelyek nem voltak gyalogosan teljesíthetőek (a jellegben nem szerepelt a ,,Gy’’ betű), amelyekhez nem volt tájegység, táv vagy szint (ez utóbbi kettő a fenti értelemben) megadva, amelyiknél a megadott táv 0 méter volt, és azokat, amelyek külföldön zajlottak, akár csak részben is, tehát külföldi helyszín[1] is szerepelt a tájegységek között.
+Az elemzésből kizártam azokat a túratávokat, amelyek nem voltak gyalogosan teljesíthetőek (a jellegben nem szerepelt a ,,Gy’’ betű), amelyekhez nem volt tájegység, táv vagy szint (ez utóbbi kettő a fenti értelemben) megadva, amelyiknél a megadott táv 0 méter volt, és azokat, amelyek külföldön zajlottak, akár csak részben is, tehát külföldi helyszín[1] is szerepelt a tájegységek között.
 
 Az elemzés `R` statisztikai környezet alatt készült, a vizualizáció `lattice` csomaggal, a jelentés pedig `knitr`-rel, `RMarkdown` formátumban. A kódot úgy írtam meg, hogy a lehető legáltalánosabb legyen (így például könnyen alkalmazható legyen más évekre is). A teljes forráskódot, és a reprodukálható jelentést közzétettem `Github`-on, a következő repozitóriumban: <https://github.com/tamas-ferenci/TTT_TuraStatisztika>.
 
@@ -23,7 +21,7 @@ A jelentés elérhető PDF formátumban a következő címen: <https://github.co
 Táv, szint- és hegységadatok egyváltozós elemzése
 -------------------------------------------------
 
-Az adatbázis eredetileg 2452 túrát tartalmaz. Ebből a nem gyalogos túrákat kizárva marad 2166, a hegység nélkülieket és külföldieket kizárva 1780, táv vagy szint nélkülieket és 0 távúakat kizárva pedig 1766.
+Az adatbázis eredetileg 2452 túratávot tartalmaz. Ebből a nem gyalogos túratávokat kizárva marad 2166, a hegység nélkülieket és külföldieket kizárva 1780, táv vagy szint nélkülieket és 0 távúakat kizárva pedig 1766.
 
 A túrák megoszlását tájegység szerint – egyelőre még a bevezetőben írt összevonás nélkül – a következő ábra mutatja:
 
@@ -33,11 +31,11 @@ Jól látszik a rengeteg, több tájon áthaladó túra (és ebből adódóan a 
 
 <img src="TTT_TuraStatisztika_Report_files/figure-markdown_github/hegysegmegoszlas2-1.png" style="display: block; margin: auto;" />
 
-A túrák távjainak eloszlását a következő ábra mutatja (hisztogramon). Mivel van egy-két extrém hosszú túra, melyek miatt a legtöbb túrát tartalmazó régió elég kicsire össze lenne nyomva, így a jobb oldalon külön látható a 100 km-nél rövidebb túrákra az eloszlás:
+A túratávok hosszainak eloszlását a következő ábra mutatja (hisztogramon). Mivel van egy-két extrém hosszú túratáv, melyek miatt a legtöbb túrát tartalmazó régió elég kicsire össze lenne nyomva, így a jobb oldalon külön látható a 100 km-nél rövidebb túratávokra az eloszlás:
 
 <img src="TTT_TuraStatisztika_Report_files/figure-markdown_github/taveloszlas-1.png" width=".49\linewidth" /><img src="TTT_TuraStatisztika_Report_files/figure-markdown_github/taveloszlas-2.png" width=".49\linewidth" />
 
-Konkrétan kiemelve, számszerűen a legrövidebb túrák:
+Konkrétan kiemelve, számszerűen a legrövidebb túratávok:
 
 <table style="width:100%;">
 <colgroup>
@@ -167,11 +165,11 @@ Konkrétan kiemelve, számszerűen a legrövidebb túrák:
 </tbody>
 </table>
 
-A túrák szintjeinek eloszlása, hasonlóan jobb oldalon csak a 3000 méternél kisebb szintemelkedésű túrák eloszlása ábrázolva:
+A túratávok szintjeinek eloszlása, hasonlóan jobb oldalon csak a 3000 méternél kisebb szintemelkedésű túratávok eloszlása ábrázolva:
 
 <img src="TTT_TuraStatisztika_Report_files/figure-markdown_github/szinteloszlas-1.png" width=".49\linewidth" /><img src="TTT_TuraStatisztika_Report_files/figure-markdown_github/szinteloszlas-2.png" width=".49\linewidth" />
 
-A legnagyobb szintemelkedésű túrák (a legalacsonyabbakat nincs értelme kitáblázni, hiszen több tucat van, aminél ez nulla):
+A legnagyobb szintemelkedésű túratávok (a legalacsonyabbakat nincs értelme kitáblázni, hiszen több tucat van, aminél ez nulla):
 
 <table>
 <colgroup>
@@ -239,9 +237,9 @@ A legnagyobb szintemelkedésű túrák (a legalacsonyabbakat nincs értelme kit�
 Táv- és szintadatok együttes elemzése
 -------------------------------------
 
-Érdekes kérdés annak vizsgálata, hogy a táv és a szintemelkedés hogyan oszlik meg, ha *együtt* vizsgáljuk őket, nem külön-külön, tehát ha egyszerre vesszük figyelembe, hogy mennyi egy túra távja *és* szintje. Annál is inkább, mert ezek nagyon természetesen adnak egy új paramétert (figyelmes szemlélő már az előbbi táblázatokban is észrevehette őket): a túra meredekségét, ami a szint és a táv hányadosa. (Ha az előbbit méterben mérjük, utóbbit kilométerben, akkor a meredekséget ezrelékben (‰) kapjuk meg.) Ez ilyen formában egyfajta ,,átlagos’’ meredekség, ami messze nem tökéletes mutató, hiszen a valóságban az is számít ugyancsak, hogy az emelkedések hogyan oszlanak meg a túra útvonalán, de ezekből az adatokból ez a legjobb, amit ki tudunk számolni.
+Érdekes kérdés annak vizsgálata, hogy a táv és a szintemelkedés hogyan oszlik meg, ha *együtt* vizsgáljuk őket, nem külön-külön, tehát ha egyszerre vesszük figyelembe, hogy mennyi egy túratáv távja *és* szintje. Annál is inkább, mert ezek nagyon természetesen adnak egy új paramétert (figyelmes szemlélő már az előbbi táblázatokban is észrevehette őket): a túratáv meredekségét, ami a szint és a táv hányadosa. (Ha az előbbit méterben mérjük, utóbbit kilométerben, akkor a meredekséget ezrelékben (‰) kapjuk meg.) Ez ilyen formában egyfajta ,,átlagos’’ meredekség, ami messze nem tökéletes mutató, hiszen a valóságban az is számít ugyancsak, hogy az emelkedések hogyan oszlanak meg a túra útvonalán, de ezekből az adatokból ez a legjobb, amit ki tudunk számolni.
 
-A táv- és szintadatok egy kézenfekvő ábrázolása a szóródási diagram: minden pont egy túra, a vízszintes koordinátája a távja, a függőleges a szintje. Íme ez a 2016-os magyar teljesítménytúra-naptárra (az áttekinthetőség kedvéért a korábban használt 100 km-es és 3000 méteres szűkítéssel):
+A táv- és szintadatok egy kézenfekvő ábrázolása a szóródási diagram: minden pont egy túratáv, a vízszintes koordinátája a távja, a függőleges a szintje. Íme ez a 2016-os magyar teljesítménytúra-naptárra (az áttekinthetőség kedvéért a korábban használt 100 km-es és 3000 méteres szűkítéssel):
 
 <img src="TTT_TuraStatisztika_Report_files/figure-markdown_github/tavszintegyutt-1.png" style="display: block; margin: auto;" />
 
@@ -251,7 +249,7 @@ A rend kedvéért azért nézzük meg a meredekségnek is az eloszlását:
 
 <img src="TTT_TuraStatisztika_Report_files/figure-markdown_github/meredeksegeloszlas-1.png" style="display: block; margin: auto;" />
 
-A legmeredekebb túrák (a legkevésbé meredekek ezúttal sem túl érdekesek):
+A legmeredekebb túratávok (a legkevésbé meredekek ezúttal sem túl érdekesek):
 
 <table style="width:100%;">
 <colgroup>
@@ -316,7 +314,7 @@ A legmeredekebb túrák (a legkevésbé meredekek ezúttal sem túl érdekesek):
 </tbody>
 </table>
 
-Látható, hogy ezek jórészt igen rövid túrák, így jöhetett ki az extrém meredekség, ezért érdekes lehet megnézni a legmeredekebb túrákat csak azon túrák körében, melyek legalább 10 km hosszúak:
+Látható, hogy ezek jórészt igen rövid túrák, így jöhetett ki az extrém meredekség, ezért érdekes lehet megnézni a legmeredekebb túrákat csak azon túratávok körében, melyek legalább 10 km hosszúak:
 
 <table style="width:100%;">
 <colgroup>
@@ -430,7 +428,7 @@ A teljesítménytúrák távjainak eloszlása, tájegység szerint (boxplottal[2
 
 <img src="TTT_TuraStatisztika_Report_files/figure-markdown_github/tavhegysegszerint-1.png" style="display: block; margin: auto;" />
 
-A túrák szintemelkedéseinek eloszlása boxploton, tájegység szerint (itt is 3000 méterre szűkítve az ábrát):
+A túratávok szintemelkedéseinek eloszlása boxploton, tájegység szerint (itt is 3000 méterre szűkítve az ábrát):
 
 <img src="TTT_TuraStatisztika_Report_files/figure-markdown_github/szinthegysegszerint-1.png" style="display: block; margin: auto;" />
 
