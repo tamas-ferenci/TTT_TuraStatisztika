@@ -1,0 +1,251 @@
+---
+title: "A magyar teljesítménytúra-naptár fejlődése, 2008-2016"
+author: "Ferenci Tamás, tamas.ferenci@medstat.hu"
+date: '`r format(Sys.time(), "%Y.\\ %B %d.")`'
+output:
+  github_document:
+    pandoc_args: ["--smart"]
+    toc: true
+  pdf_document:
+    toc: true
+    toc_depth: 3
+header-includes:
+  - \usepackage[magyar]{babel}
+  - \usepackage{subfig}
+knit: ( function( inputFile, encoding ) { rmarkdown::render( inputFile, encoding = encoding, output_format = "all", clean = FALSE ) } )
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set( echo = FALSE, fig.align = "center" )
+```
+
+# Cél
+
+Jelen elemzés célja annak vizsgálata, hogy -- a Teljesítménytúrázók Társaságának adatai alapján -- hogyan változott, fejlődött a magyar teljesítménytúrák kínálata. Olyan szempontokat fogok vizsgálni, mint a túrák száma, a túratávok száma, a résztvevők száma, a túrák jellege és mindezek összefüggései. Az elérhető adatokból adódóan a vizsgálat a 2008-2016 időszakot fogja át.
+
+# Számítástechnikai megjegyzések
+
+Az elemzéshez felhasznált adatok forrását a Teljesítménytúrázók Társaságának (http://www.teljesitmenyturazoktarsasaga.hu/) honlapján elérhető statisztikák jelentik: ezek 2008-tól évente tartalmazzák -- számítógéppel jól feldolgozható formátumban -- valamennyi túra és túratáv legfontosabb adatait.
+
+Az adatok beolvasása meglehetősen egyértelmű feladat, csak pár dologra kell odafigyelni:
+
+* 2013-ban és az előtt `xls` a formátum, utána `xlsx`.
+* 2008-ban `M.` a megjegyzés rovat neve, utána `Megjegyzés`.
+* Minden túrának van egy önálló sora a táblában, *és* minden távjának külön-külön is. Elég ez utóbbit megtartani, hiszen azokból is vissza tudunk következtetni később minden, számunkra szükséges, túrára jellemző adatra.
+* Szerencsére a kerékpáros -- illetve általában: nem gyalog- -- túráknál ez a jelleg a megjegyzés rovatban is fel van tüntetve, így az előbbi szűrés után is meg tudjuk ezeket találni, hogy kizárjuk a vizsgálatból.
+* Az előbbi két pontot egybevetve: azokat a sorokat kell kiszűrni a táblázatból, ahol az `R.` értéke nem nulla (ezek a túratávok) és ahol a `Megjegyzés` üres (ezek a gyalogos túrák).
+* A dátum oszlop neve változik (mert mindig bele van írva az évszám).
+* Egy-két helyen nem szám szerepel az Indulók, illetve a Teljesítők oszlopban, ezt szintén szűrni kell.
+
+Az elemzés `R` statisztikai környezet alatt készült, a vizualizáció `lattice` csomaggal, a jelentés pedig `knitr`-rel, `RMarkdown` formátumban. A kódot úgy írtam meg, hogy a lehető legáltalánosabb legyen (így például könnyen alkalmazható legyen más évekre is). A teljes forráskódot, és a reprodukálható jelentést közzétettem `Github`-on, a következő repozitóriumban: https://github.com/tamas-ferenci/TTT_TuraStatisztika.
+
+A jelentés elérhető PDF formátumban a következő címen: https://github.com/tamas-ferenci/TTT_TuraStatisztika/blob/master/TTT_TuraNaptarFejlodese_Report.pdf (letölthető a jobb oldalt felül lévő Download feliratú gombbal).
+
+```{r elokeszites1, include=FALSE}
+library( RCurl )
+library( XML )
+library( lattice )
+library( latticeExtra )
+library( XLConnect )
+library( plyr )
+library( rvest )
+library( pander )
+
+RawData <- data.frame()
+for( ev in 2008:2016 ) {
+  tmp <- tempfile( fileext = if( ev<=2013 ) ".xls" else ".xlsx" )
+  download.file( url = paste0( "http://www.teljesitmenyturazoktarsasaga.hu/sites/default/files/turastatisztika/turastatisztika_", ev,
+                               if( ev<=2013 ) ".xls" else ".xlsx" ), destfile = tmp, mode = "wb" )
+  RawDataTemp <- readWorksheetFromFile( file = tmp, sheet = paste0( "Statisztika_", ev ) )
+  if( ev==2008 )
+    RawDataTemp$Megjegyzés <- RawDataTemp$M.
+  RawDataTemp <- subset( RawDataTemp, R.!=0&is.na( Megjegyzés ) )
+  names( RawDataTemp )[ grep( "Dátum", names( RawDataTemp ) ) ] <- "Dátum"
+  RawData <- rbind( RawData, RawDataTemp[ , c( "Dátum", "Táv.neve", "Táv..km.", "Szint..m.", "Indulók", "Teljesítők", "No." ) ] )
+}
+RawData$Ev <- as.numeric( format( RawData$Dátum, "%Y" ) )
+RawData$Het <- as.numeric( format( RawData$Dátum, "%W" ) )
+RawData$EvHet <- RawData$Ev + RawData$Het/53
+
+RawData$Indulók[ RawData$Indulók=="sok" ] <- NA
+RawData$Indulók <- as.numeric( RawData$Indulók )
+RawData$Teljesítők[ RawData$Teljesítők=="6 csapat" ] <- NA
+RawData$Teljesítők <- as.numeric( RawData$Teljesítők )
+RawData <- transform( RawData, TeljArany = Teljesítők/Indulók )
+
+RawData$Táv..km. <- gsub( ",", ".", RawData$Táv..km. )
+RawData$Táv..km. <- as.numeric( RawData$Táv..km. )
+RawData$Szint..m. <- as.numeric( RawData$Szint..m. )
+```
+
+# Eredmények
+
+## Túrák és túrázok száma
+
+### Túrák száma
+
+A következő ábra mutatja a túrák számának változását (évente):
+```{r turakszama1}
+barchart( table( RawData[ !duplicated( interaction( RawData$Ev, RawData$No. ) ), ]$Ev ), horizontal = FALSE,
+          ylab = "Túrák száma [db]", xlab = "Év" )
+```
+
+Jól látszik a folyamatos, nagyjából állandó ütemű növekedés a túrák számában. Egyszerű lineáris modellel számolva azt mondhatjuk, hogy évente `r round(coef(lm(Freq~as.numeric(Var1),data.frame(table( RawData[ !duplicated( interaction( RawData$Ev, RawData$No. ) ), ]$Ev ),stringsAsFactors = F)))[2],1)` a növekedés a túrák számában.
+
+Mivel ismerjük a túrák pontos időpontját, így nem muszáj évente csoportosítanunk, lehetünk sokkal finomabb felbontásúak: nézzük meg hetente!
+```{r turakszama2}
+xyplot( Freq ~ as.numeric( as.character( Var1 ) ),
+        data = data.frame( table( RawData[ !duplicated( interaction( RawData$Ev, RawData$No. ) ), ]$EvHet ) ), type = "l",
+        ylab = "Túrák száma [db]",  xlab = "Időpont" )
+```
+
+Ez az ábra nehezen átlátható, hiszen érezhető, hogy nagyon erős az éven belüli, ismétlődő mintázat (a szezonalitás). Éppen ezért ábrázoljuk inkább úgy az adatokat, hogy a vízszintes tengelyen a túra megrendezésének hete van, és minden év külön görbét kap:
+```{r turakszama3}
+xyplot( Freq ~ Het, groups = Ev,
+        data = data.frame( xtabs( ~Ev+Het, data = RawData[ !duplicated( interaction( RawData$Ev, RawData$No. ) ), ] ) ),
+        type = "l", ylab = "Túrák száma [db]",
+        xlab = "Hét", par.settings = list( superpose.line = list(
+          col = colorRampPalette( c( "red", "green" ) )( length( unique( RawData$Ev ) ) ) ) ),
+        auto.key = list( columns = 3, points = FALSE, lines = TRUE ),
+        scales = list( x = list( at = seq( 0, 52, 4 ) ) ) ) +
+  as.layer( xyplot( Freq/length( unique( RawData$Ev ) ) ~ Var1,
+                    data = data.frame( table( RawData[ !duplicated( interaction( RawData$Ev, RawData$No. ) ), ]$Het ) ),
+                    type = "l", lwd = 4 ) )
+```
+
+Mivel az egyes évek nem egyszerűen külön kategóriák, hanem sorba vannak rendezve, így ezt a színezés is kifejezi: a színek is sorban jönnek -- pirostól a zöldig -- így abból is látható, hogyan haladunk előre az időben. A vastag kék vonal az összes év átlagát tünteti fel, mely még jobban vezeti a szemet a szezonális mintázatot illetően.
+
+Világosan látható, hogy a túrák számának két, jól elkülönülő maximuma van: az egyik a 16-20. hét (május) között, a másik a 36-40. hét (október) környékén. A nyár közepe-vége, és a tél egyaránt kevésbé népszerű időszak túrarendezésre.
+
+### Túratávok száma
+
+A túratávok számának változását -- éves bontásban -- az alábbi ábra mutatja:
+```{r turatavokszama1}
+barchart( table( RawData$Ev ), horizontal = FALSE, ylab = "Túratávok száma [db]", xlab = "Év" )
+```
+
+Hasonló töretlen fejlődést figyelhetünk meg itt is; évente átlagosan `r round(coef(lm(Freq~as.numeric(Var1),data.frame(table( RawData$Ev ),stringsAsFactors = F)))[2],1)` a növekedés a túrák számában.
+
+A szezonális mintázat egészen hasonló a túrák számához:
+```{r turatavokszama2}
+xyplot( Freq ~ Var2, groups = Var1, data = data.frame( table( RawData$Ev, RawData$Het ) ), type = "l", ylab = "Túratávok száma [db]",
+        xlab = "Hét", par.settings = list( superpose.line = list(
+          col = colorRampPalette( c( "red", "green" ) )( length( unique( RawData$Ev ) ) ) ) ),
+        auto.key = list( columns = 3, points = FALSE, lines = TRUE ),
+        scales = list( x = list( at = seq( 0, 52, 4 ) ) ) ) +
+  as.layer( xyplot( Freq/length( unique( RawData$Ev ) ) ~ Var1, data = data.frame( table( RawData$Het ) ), type = "l", lwd = 4 ) )
+
+```
+
+### Résztvevők száma
+
+Résztvevők száma alatt most az indulók számát értem (a teljesítők számát -- és így a teljesítők arányát -- logikusabb a túra egyéb jellemzőivel, például a szintjével vagy a távjával összevetni, és nem az időpontjával, amitől kevésbé logikus, hogy függjön, így ezt a kérdést máshol fogom vizsgálni).
+
+Így néz ki az indulók száma éves bontásban:
+```{r indulokszama1}
+barchart( tapply( RawData$Indulók, RawData$Ev, sum, na.rm = TRUE ), horizontal = FALSE, ylab = "Résztvevők száma [fő]", xlab = "Év" )
+```
+A fejlődés összességében itt is látható, ám jóval kevésbé töretlen mint a túrák vagy távok számát tekintve.
+
+A szezonális mintázat:
+```{r indulokszama2}
+temp <- data.frame( tapply( RawData$Indulók, interaction( RawData$Ev, RawData$Het ), sum, na.rm = TRUE ) )
+temp <- data.frame( temp, do.call( rbind, strsplit( rownames( temp ), ".", fixed = TRUE ) ), stringsAsFactors = FALSE )
+names( temp ) <- c( "Freq", "Var1", "Var2" )
+temp$Var1 <- as.numeric( temp$Var1 )
+temp$Var2 <- as.numeric( temp$Var2 )
+temp2 <- data.frame( tapply( RawData$Indulók, RawData$Het, sum, na.rm = TRUE ) )
+names( temp2 ) <- "Freq"
+temp2$Var1 <- as.numeric( rownames( temp2 ) )
+xyplot( Freq ~ Var2, groups = Var1, data = temp, type = "l", ylab = "Résztvevők száma [fő]",
+        xlab = "Hét", par.settings = list( superpose.line = list(
+          col = colorRampPalette( c( "red", "green" ) )( length( unique( RawData$Ev ) ) ) ) ),
+        auto.key = list( columns = 3, points = FALSE, lines = TRUE ),
+        scales = list( x = list( at = seq( 0, 52, 4 ) ) ) ) +
+  as.layer( xyplot( Freq/length( unique( RawData$Ev ) ) ~ Var1, data = temp2, type = "l", lwd = 4 ) )
+```
+Érdekes, hogy a ,,kétpúpú'' mintázat itt is pontosan ugyanúgy megjelenik, ám eltérő súllyal: a májusi csúcs jóval több túrázót vonz mint az őszi. Megfigyelhető még egy, jóval kisebb csúcs január végén is. (A nyilvánvaló magyarázat, hogy egyes népszerű túrákat mindig az év ugyanazon vagy hasonló időpontjában rendezik meg, amik a túrák számát lehet, hogy csak 1-gyel növelik, de a résztvevők számát nagyon is sokkal.)
+
+## Túrák, túratávok jellege
+
+### Résztávok száma
+
+A következő ábra mutatja a túrák számának változását résztávjaik száma szerint:
+```{r tav1}
+barchart( xtabs( ~Ev + cut( Freq, c( 0, 1, 2, 3, 4, 5, Inf ), c( 1:5, ">5" ) ), data = data.frame( xtabs( ~Ev+No., data = RawData ) ),
+                 subset = Freq>0 ), horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Túrák száma [db]", xlab = "Év" )
+```
+
+Érdekesebb kérdés most számunkra az *összetétel* alakulása, azaz, hogy a megoszlás hogyan változott:
+```{r tav2}
+barchart( prop.table( xtabs( ~Ev + cut( Freq, c( 0, 1, 2, 3, 4, 5, Inf ), c( 1:5, ">5" ) ),
+                             data = data.frame( xtabs( ~Ev+No., data = RawData ) ),
+                             subset = Freq>0 ), 1 )*100, horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Megoszlás [%]", xlab = "Év" )
+```
+
+Jól látszik, hogy a résztáv szerint összetétel meglehetősen stabil maradt a teljes vizsgált időszakban.
+
+### Résztvevők száma
+
+A túratávok számának változása az indulók száma szerint (kategorizálva ezt):
+```{r turakindulokszama1}
+barchart( xtabs( ~Ev + cut( Indulók, c( 0, 100, 300, 500, 1000, Inf ), c( "<=100", "101-300", "301-500", "501-1000", ">=1000" ) ), data = RawData ),
+          horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Túratávok száma [db]", xlab = "Év" )
+
+```
+(Az oszlopok magassága azért nem egyezik a túratávok számánál látottal, mert nem minden túratávra volt megadva az indulók száma -- ezek itt értelemszerűen hiányoznak, de abban a kimutatásban szerepeltek.)
+
+Megint csak az összetétel az érdekesebb most számunkra:
+```{r turakindulokszama2}
+barchart( prop.table( xtabs( ~Ev + cut( Indulók, c( 0, 100, 300, 500, 1000, Inf ), c( "<=100", "101-300", "301-500", "501-1000", ">=1000" ) ),
+                             data = RawData ), 1 )*100, horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Megoszlás [%]", xlab = "Év" )
+```
+
+Itt is megállapíthatjuk, hogy a túrák jellege ebből a szempontból is állandó maradt az évek alatt.
+
+A fenti ábrákkal szemben felhozható az a kifogás, hogy a résztvevők számát -- ami a valóságban egy folytonos változó -- kategorizáltuk, ami információvesztéssel jár. Helyesebb tehát, ha boxplot-ot használunk (az áttekinthetőség kedvéért a függőleges tengelyen logaritmikus skálázással):
+```{r turakindulokszama3}
+bwplot( Indulók~as.factor( Ev ), data = RawData, scales = list( y = list( log = 10, labels = 10^(0:3), at = 10^(0:3) ) ), horizontal = FALSE,
+        xlab = "Év", ylab = "Indulók száma [fő]" )
+```
+Látható, hogy a konklúzió ugyanaz (a továbbiakban, a közérthetőség miatt, inkább az előbbi típusú ábrázolást fogom használni).
+
+### Táv
+
+A túratávok megoszlása távjuk szerint:
+```{r turaktav1}
+barchart( xtabs( ~Ev + cut( Táv..km., c( 0, 10, 20, 30, 50, Inf ), c( "<=10", "10-20", "20-30", "30-50", ">=50" ) ), data = RawData ),
+          horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Túratávok száma [db]", xlab = "Év" )
+```
+
+A megoszlásuk:
+```{r turaktav2}
+barchart( prop.table( xtabs( ~Ev + cut( Táv..km., c( 0, 10, 20, 30, 50, Inf ), c( "<=10", "10-20", "20-30", "30-50", ">=50" ) ),
+                             data = RawData ), 1 )*100, horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Megoszlás [%]", xlab = "Év" )
+```
+
+Összességében itt is az látszik, hogy a túrák jellege meglehetősen stabil maradt az évek alatt, bár egy enyhe előretörése a rövidebb távú túráknak azért érzékelhető.
+
+### Szint
+
+A túratávok megoszlása szintjük szerint:
+```{r turakszint1}
+barchart( xtabs( ~Ev + cut( Szint..m., c( 0, 200, 400, 1000, 1500, Inf ), c( "<=200", "200-400", "400-1000", "1000-1500", ">=1500" ) ),
+                 data = RawData ), horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Túratávok száma [db]", xlab = "Év" )
+```
+
+A megoszlásuk:
+```{r turakszint2}
+barchart( prop.table( xtabs( ~Ev + cut( Szint..m., c( 0, 200, 400, 1000, 1500, Inf ), c( "<=200", "200-400", "400-1000", "1000-1500", ">=1500" ) ),
+                             data = RawData ), 1 )*100, horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Megoszlás [%]", xlab = "Év" )
+```
+
+Itt -- ismét csak -- meglehetősen stabil összetételt látunk.
+
+# Konklúziók
+
+A magyar teljesítménytúra-naptár dinamikus fejlődésen ment át az elmúlt szűk 10 évben. Mind a túrák száma, mind a távok száma jelentős mértékben és szinte töretlenül fejlődött (2008 és 2016 között mindkettő több mint kétszeresére nőtt!). A résztvevők száma is lényegesen emelkedett, bár az előbbitől elmaradó mértékben (mintegy 50\%-kal ez alatt az időszak alatt, évi 80 ezerről 120 ezerre).
+
+A túrák megrendezési időpontjának éven belüli eloszlásának mintázata rendkívül állandó: két kiemelkedő csúcs tapasztalható, az első május, a második október környékén. A résztvevők száma esetében a második csúcs nem annyira kifejezett, illetve megjelenik egy harmadik is, január legvégén (a népszerű, sok túrázót megmozgató túrák hatására).
+
+Érdekes, hogy a túrák, illetve túratávok összetétele -- akár résztávok száma szerint, akár indulók száma szerint, akár táv vagy szint szerinti megoszlását nézzük -- stabil a majdnem egy évtized változásainak ellenére. Egyedül a rövidebb távú túrák arányának enyhe emelkedése érzékelhető.
