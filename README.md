@@ -1,2 +1,4 @@
 # TTT_TuraStatisztika
-Magyar teljesítménytúrák adatainak elemzése a Teljesítménytúrázók Társaságának adatbázisa alapján, elérhető [ide](https://github.com/tamas-ferenci/TTT_TuraStatisztika/blob/master/TTT_TuraStatisztika_Report.md) kattintva (a PDF változat pedig [itt](https://github.com/tamas-ferenci/TTT_TuraStatisztika/blob/master/TTT_TuraStatisztika_Report.pdf)).
+A magyar teljesítménytúrák 2016-os adatainak elemzése a Teljesítménytúrázók Társaságának adatbázisa alapján, elérhető [ide](https://github.com/tamas-ferenci/TTT_TuraStatisztika/blob/master/TTT_TuraStatisztika_Report.md) kattintva (a PDF változat pedig [itt](https://github.com/tamas-ferenci/TTT_TuraStatisztika/blob/master/TTT_TuraStatisztika_Report.pdf)).
+
+A magyar teljesítménytúra-naptár 2008 és 2016 közötti fejlődéséről szóló elemzés elérhető [ide](https://github.com/tamas-ferenci/TTT_TuraStatisztika/blob/master/TTT_TuraNaptarFejlodese_Report.md) kattintva (a PDF változat pedig [itt](https://github.com/tamas-ferenci/TTT_TuraStatisztika/blob/master/TTT_TuraNaptarFejlodese_Report.pdf)).
