@@ -53,7 +53,9 @@ Túrák és túrázok száma
 
 ### Túrák száma
 
-A következő ábra mutatja a túrák számának változását (évente): <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakszama1-1.png" style="display: block; margin: auto;" />
+A következő ábra mutatja a túrák számának változását (évente):
+
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakszama1-1.png" style="display: block; margin: auto;" />
 
 Jól látszik a folyamatos, nagyjából állandó ütemű növekedés a túrák számában. Egyszerű lineáris modellel számolva azt mondhatjuk, hogy évente 54.2 a növekedés a túrák számában.
 
