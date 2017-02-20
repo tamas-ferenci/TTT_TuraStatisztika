@@ -85,6 +85,7 @@ RawData$Szint..m. <- as.numeric( RawData$Szint..m. )
 ### Túrák száma
 
 A következő ábra mutatja a túrák számának változását (évente):
+
 ```{r turakszama1}
 barchart( table( RawData[ !duplicated( interaction( RawData$Ev, RawData$No. ) ), ]$Ev ), horizontal = FALSE,
           ylab = "Túrák száma [db]", xlab = "Év" )
@@ -93,6 +94,7 @@ barchart( table( RawData[ !duplicated( interaction( RawData$Ev, RawData$No. ) ),
 Jól látszik a folyamatos, nagyjából állandó ütemű növekedés a túrák számában. Egyszerű lineáris modellel számolva azt mondhatjuk, hogy évente `r round(coef(lm(Freq~as.numeric(Var1),data.frame(table( RawData[ !duplicated( interaction( RawData$Ev, RawData$No. ) ), ]$Ev ),stringsAsFactors = F)))[2],1)` a növekedés a túrák számában.
 
 Mivel ismerjük a túrák pontos időpontját, így nem muszáj évente csoportosítanunk, lehetünk sokkal finomabb felbontásúak: nézzük meg hetente!
+
 ```{r turakszama2}
 xyplot( Freq ~ as.numeric( as.character( Var1 ) ),
         data = data.frame( table( RawData[ !duplicated( interaction( RawData$Ev, RawData$No. ) ), ]$EvHet ) ), type = "l",
@@ -100,6 +102,7 @@ xyplot( Freq ~ as.numeric( as.character( Var1 ) ),
 ```
 
 Ez az ábra nehezen átlátható, hiszen érezhető, hogy nagyon erős az éven belüli, ismétlődő mintázat (a szezonalitás). Éppen ezért ábrázoljuk inkább úgy az adatokat, hogy a vízszintes tengelyen a túra megrendezésének hete van, és minden év külön görbét kap:
+
 ```{r turakszama3}
 xyplot( Freq ~ Het, groups = Ev,
         data = data.frame( xtabs( ~Ev+Het, data = RawData[ !duplicated( interaction( RawData$Ev, RawData$No. ) ), ] ) ),
@@ -120,6 +123,7 @@ Világosan látható, hogy a túrák számának két, jól elkülönülő maximu
 ### Túratávok száma
 
 A túratávok számának változását -- éves bontásban -- az alábbi ábra mutatja:
+
 ```{r turatavokszama1}
 barchart( table( RawData$Ev ), horizontal = FALSE, ylab = "Túratávok száma [db]", xlab = "Év" )
 ```
@@ -127,6 +131,7 @@ barchart( table( RawData$Ev ), horizontal = FALSE, ylab = "Túratávok száma [d
 Hasonló töretlen fejlődést figyelhetünk meg itt is; évente átlagosan `r round(coef(lm(Freq~as.numeric(Var1),data.frame(table( RawData$Ev ),stringsAsFactors = F)))[2],1)` a növekedés a túrák számában.
 
 A szezonális mintázat egészen hasonló a túrák számához:
+
 ```{r turatavokszama2}
 xyplot( Freq ~ Var2, groups = Var1, data = data.frame( table( RawData$Ev, RawData$Het ) ), type = "l", ylab = "Túratávok száma [db]",
         xlab = "Hét", par.settings = list( superpose.line = list(
@@ -142,12 +147,14 @@ xyplot( Freq ~ Var2, groups = Var1, data = data.frame( table( RawData$Ev, RawDat
 Résztvevők száma alatt most az indulók számát értem (a teljesítők számát -- és így a teljesítők arányát -- logikusabb a túra egyéb jellemzőivel, például a szintjével vagy a távjával összevetni, és nem az időpontjával, amitől kevésbé logikus, hogy függjön, így ezt a kérdést máshol fogom vizsgálni).
 
 Így néz ki az indulók száma éves bontásban:
+
 ```{r indulokszama1}
 barchart( tapply( RawData$Indulók, RawData$Ev, sum, na.rm = TRUE ), horizontal = FALSE, ylab = "Résztvevők száma [fő]", xlab = "Év" )
 ```
 A fejlődés összességében itt is látható, ám jóval kevésbé töretlen mint a túrák vagy távok számát tekintve.
 
 A szezonális mintázat:
+
 ```{r indulokszama2}
 temp <- data.frame( tapply( RawData$Indulók, interaction( RawData$Ev, RawData$Het ), sum, na.rm = TRUE ) )
 temp <- data.frame( temp, do.call( rbind, strsplit( rownames( temp ), ".", fixed = TRUE ) ), stringsAsFactors = FALSE )
@@ -171,12 +178,14 @@ xyplot( Freq ~ Var2, groups = Var1, data = temp, type = "l", ylab = "Résztvevő
 ### Résztávok száma
 
 A következő ábra mutatja a túrák számának változását résztávjaik száma szerint:
+
 ```{r tav1}
 barchart( xtabs( ~Ev + cut( Freq, c( 0, 1, 2, 3, 4, 5, Inf ), c( 1:5, ">5" ) ), data = data.frame( xtabs( ~Ev+No., data = RawData ) ),
                  subset = Freq>0 ), horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Túrák száma [db]", xlab = "Év" )
 ```
 
 Érdekesebb kérdés most számunkra az *összetétel* alakulása, azaz, hogy a megoszlás hogyan változott:
+
 ```{r tav2}
 barchart( prop.table( xtabs( ~Ev + cut( Freq, c( 0, 1, 2, 3, 4, 5, Inf ), c( 1:5, ">5" ) ),
                              data = data.frame( xtabs( ~Ev+No., data = RawData ) ),
@@ -188,6 +197,7 @@ Jól látszik, hogy a résztáv szerint összetétel meglehetősen stabil maradt
 ### Résztvevők száma
 
 A túratávok számának változása az indulók száma szerint (kategorizálva ezt):
+
 ```{r turakindulokszama1}
 barchart( xtabs( ~Ev + cut( Indulók, c( 0, 100, 300, 500, 1000, Inf ), c( "<=100", "101-300", "301-500", "501-1000", ">=1000" ) ), data = RawData ),
           horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Túratávok száma [db]", xlab = "Év" )
@@ -196,6 +206,7 @@ barchart( xtabs( ~Ev + cut( Indulók, c( 0, 100, 300, 500, 1000, Inf ), c( "<=10
 (Az oszlopok magassága azért nem egyezik a túratávok számánál látottal, mert nem minden túratávra volt megadva az indulók száma -- ezek itt értelemszerűen hiányoznak, de abban a kimutatásban szerepeltek.)
 
 Megint csak az összetétel az érdekesebb most számunkra:
+
 ```{r turakindulokszama2}
 barchart( prop.table( xtabs( ~Ev + cut( Indulók, c( 0, 100, 300, 500, 1000, Inf ), c( "<=100", "101-300", "301-500", "501-1000", ">=1000" ) ),
                              data = RawData ), 1 )*100, horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Megoszlás [%]", xlab = "Év" )
@@ -204,6 +215,7 @@ barchart( prop.table( xtabs( ~Ev + cut( Indulók, c( 0, 100, 300, 500, 1000, Inf
 Itt is megállapíthatjuk, hogy a túrák jellege ebből a szempontból is állandó maradt az évek alatt.
 
 A fenti ábrákkal szemben felhozható az a kifogás, hogy a résztvevők számát -- ami a valóságban egy folytonos változó -- kategorizáltuk, ami információvesztéssel jár. Helyesebb tehát, ha boxplot-ot használunk (az áttekinthetőség kedvéért a függőleges tengelyen logaritmikus skálázással):
+
 ```{r turakindulokszama3}
 bwplot( Indulók~as.factor( Ev ), data = RawData, scales = list( y = list( log = 10, labels = 10^(0:3), at = 10^(0:3) ) ), horizontal = FALSE,
         xlab = "Év", ylab = "Indulók száma [fő]" )
@@ -213,12 +225,14 @@ Látható, hogy a konklúzió ugyanaz (a továbbiakban, a közérthetőség miat
 ### Táv
 
 A túratávok megoszlása távjuk szerint:
+
 ```{r turaktav1}
 barchart( xtabs( ~Ev + cut( Táv..km., c( 0, 10, 20, 30, 50, Inf ), c( "<=10", "10-20", "20-30", "30-50", ">=50" ) ), data = RawData ),
           horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Túratávok száma [db]", xlab = "Év" )
 ```
 
 A megoszlásuk:
+
 ```{r turaktav2}
 barchart( prop.table( xtabs( ~Ev + cut( Táv..km., c( 0, 10, 20, 30, 50, Inf ), c( "<=10", "10-20", "20-30", "30-50", ">=50" ) ),
                              data = RawData ), 1 )*100, horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Megoszlás [%]", xlab = "Év" )
@@ -229,12 +243,14 @@ barchart( prop.table( xtabs( ~Ev + cut( Táv..km., c( 0, 10, 20, 30, 50, Inf ), 
 ### Szint
 
 A túratávok megoszlása szintjük szerint:
+
 ```{r turakszint1}
 barchart( xtabs( ~Ev + cut( Szint..m., c( 0, 200, 400, 1000, 1500, Inf ), c( "<=200", "200-400", "400-1000", "1000-1500", ">=1500" ) ),
                  data = RawData ), horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Túratávok száma [db]", xlab = "Év" )
 ```
 
 A megoszlásuk:
+
 ```{r turakszint2}
 barchart( prop.table( xtabs( ~Ev + cut( Szint..m., c( 0, 200, 400, 1000, 1500, Inf ), c( "<=200", "200-400", "400-1000", "1000-1500", ">=1500" ) ),
                              data = RawData ), 1 )*100, horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Megoszlás [%]", xlab = "Év" )

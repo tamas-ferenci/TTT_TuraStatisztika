@@ -53,7 +53,9 @@ Túrák és túrázok száma
 
 ### Túrák száma
 
-A következő ábra mutatja a túrák számának változását (évente): <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakszama1-1.png" style="display: block; margin: auto;" />
+A következő ábra mutatja a túrák számának változását (évente):
+
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakszama1-1.png" style="display: block; margin: auto;" />
 
 Jól látszik a folyamatos, nagyjából állandó ütemű növekedés a túrák számában. Egyszerű lineáris modellel számolva azt mondhatjuk, hogy évente 54.2 a növekedés a túrák számában.
 
@@ -61,7 +63,9 @@ Mivel ismerjük a túrák pontos időpontját, így nem muszáj évente csoporto
 
 <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakszama2-1.png" style="display: block; margin: auto;" />
 
-Ez az ábra nehezen átlátható, hiszen érezhető, hogy nagyon erős az éven belüli, ismétlődő mintázat (a szezonalitás). Éppen ezért ábrázoljuk inkább úgy az adatokat, hogy a vízszintes tengelyen a túra megrendezésének hete van, és minden év külön görbét kap: <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakszama3-1.png" style="display: block; margin: auto;" />
+Ez az ábra nehezen átlátható, hiszen érezhető, hogy nagyon erős az éven belüli, ismétlődő mintázat (a szezonalitás). Éppen ezért ábrázoljuk inkább úgy az adatokat, hogy a vízszintes tengelyen a túra megrendezésének hete van, és minden év külön görbét kap:
+
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakszama3-1.png" style="display: block; margin: auto;" />
 
 Mivel az egyes évek nem egyszerűen külön kategóriák, hanem sorba vannak rendezve, így ezt a színezés is kifejezi: a színek is sorban jönnek – pirostól a zöldig – így abból is látható, hogyan haladunk előre az időben. A vastag kék vonal az összes év átlagát tünteti fel, mely még jobban vezeti a szemet a szezonális mintázatot illetően.
 
@@ -69,54 +73,80 @@ Világosan látható, hogy a túrák számának két, jól elkülönülő maximu
 
 ### Túratávok száma
 
-A túratávok számának változását – éves bontásban – az alábbi ábra mutatja: <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turatavokszama1-1.png" style="display: block; margin: auto;" />
+A túratávok számának változását – éves bontásban – az alábbi ábra mutatja:
+
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turatavokszama1-1.png" style="display: block; margin: auto;" />
 
 Hasonló töretlen fejlődést figyelhetünk meg itt is; évente átlagosan 156.2 a növekedés a túrák számában.
 
-A szezonális mintázat egészen hasonló a túrák számához: <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turatavokszama2-1.png" style="display: block; margin: auto;" />
+A szezonális mintázat egészen hasonló a túrák számához:
+
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turatavokszama2-1.png" style="display: block; margin: auto;" />
 
 ### Résztvevők száma
 
 Résztvevők száma alatt most az indulók számát értem (a teljesítők számát – és így a teljesítők arányát – logikusabb a túra egyéb jellemzőivel, például a szintjével vagy a távjával összevetni, és nem az időpontjával, amitől kevésbé logikus, hogy függjön, így ezt a kérdést máshol fogom vizsgálni).
 
-Így néz ki az indulók száma éves bontásban: <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/indulokszama1-1.png" style="display: block; margin: auto;" /> A fejlődés összességében itt is látható, ám jóval kevésbé töretlen mint a túrák vagy távok számát tekintve.
+Így néz ki az indulók száma éves bontásban:
 
-A szezonális mintázat: <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/indulokszama2-1.png" style="display: block; margin: auto;" /> Érdekes, hogy a ,,kétpúpú’’ mintázat itt is pontosan ugyanúgy megjelenik, ám eltérő súllyal: a májusi csúcs jóval több túrázót vonz mint az őszi. Megfigyelhető még egy, jóval kisebb csúcs január végén is. (A nyilvánvaló magyarázat, hogy egyes népszerű túrákat mindig az év ugyanazon vagy hasonló időpontjában rendezik meg, amik a túrák számát lehet, hogy csak 1-gyel növelik, de a résztvevők számát nagyon is sokkal.)
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/indulokszama1-1.png" style="display: block; margin: auto;" /> A fejlődés összességében itt is látható, ám jóval kevésbé töretlen mint a túrák vagy távok számát tekintve.
+
+A szezonális mintázat:
+
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/indulokszama2-1.png" style="display: block; margin: auto;" /> Érdekes, hogy a ,,kétpúpú’’ mintázat itt is pontosan ugyanúgy megjelenik, ám eltérő súllyal: a májusi csúcs jóval több túrázót vonz mint az őszi. Megfigyelhető még egy, jóval kisebb csúcs január végén is. (A nyilvánvaló magyarázat, hogy egyes népszerű túrákat mindig az év ugyanazon vagy hasonló időpontjában rendezik meg, amik a túrák számát lehet, hogy csak 1-gyel növelik, de a résztvevők számát nagyon is sokkal.)
 
 Túrák, túratávok jellege
 ------------------------
 
 ### Résztávok száma
 
-A következő ábra mutatja a túrák számának változását résztávjaik száma szerint: <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/tav1-1.png" style="display: block; margin: auto;" />
+A következő ábra mutatja a túrák számának változását résztávjaik száma szerint:
 
-Érdekesebb kérdés most számunkra az *összetétel* alakulása, azaz, hogy a megoszlás hogyan változott: <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/tav2-1.png" style="display: block; margin: auto;" />
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/tav1-1.png" style="display: block; margin: auto;" />
+
+Érdekesebb kérdés most számunkra az *összetétel* alakulása, azaz, hogy a megoszlás hogyan változott:
+
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/tav2-1.png" style="display: block; margin: auto;" />
 
 Jól látszik, hogy a résztáv szerint összetétel meglehetősen stabil maradt a teljes vizsgált időszakban.
 
 ### Résztvevők száma
 
-A túratávok számának változása az indulók száma szerint (kategorizálva ezt): <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakindulokszama1-1.png" style="display: block; margin: auto;" /> (Az oszlopok magassága azért nem egyezik a túratávok számánál látottal, mert nem minden túratávra volt megadva az indulók száma – ezek itt értelemszerűen hiányoznak, de abban a kimutatásban szerepeltek.)
+A túratávok számának változása az indulók száma szerint (kategorizálva ezt):
 
-Megint csak az összetétel az érdekesebb most számunkra: <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakindulokszama2-1.png" style="display: block; margin: auto;" />
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakindulokszama1-1.png" style="display: block; margin: auto;" /> (Az oszlopok magassága azért nem egyezik a túratávok számánál látottal, mert nem minden túratávra volt megadva az indulók száma – ezek itt értelemszerűen hiányoznak, de abban a kimutatásban szerepeltek.)
+
+Megint csak az összetétel az érdekesebb most számunkra:
+
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakindulokszama2-1.png" style="display: block; margin: auto;" />
 
 Itt is megállapíthatjuk, hogy a túrák jellege ebből a szempontból is állandó maradt az évek alatt.
 
-A fenti ábrákkal szemben felhozható az a kifogás, hogy a résztvevők számát – ami a valóságban egy folytonos változó – kategorizáltuk, ami információvesztéssel jár. Helyesebb tehát, ha boxplot-ot használunk (az áttekinthetőség kedvéért a függőleges tengelyen logaritmikus skálázással): <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakindulokszama3-1.png" style="display: block; margin: auto;" /> Látható, hogy a konklúzió ugyanaz (a továbbiakban, a közérthetőség miatt, inkább az előbbi típusú ábrázolást fogom használni).
+A fenti ábrákkal szemben felhozható az a kifogás, hogy a résztvevők számát – ami a valóságban egy folytonos változó – kategorizáltuk, ami információvesztéssel jár. Helyesebb tehát, ha boxplot-ot használunk (az áttekinthetőség kedvéért a függőleges tengelyen logaritmikus skálázással):
+
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakindulokszama3-1.png" style="display: block; margin: auto;" /> Látható, hogy a konklúzió ugyanaz (a továbbiakban, a közérthetőség miatt, inkább az előbbi típusú ábrázolást fogom használni).
 
 ### Táv
 
-A túratávok megoszlása távjuk szerint: <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turaktav1-1.png" style="display: block; margin: auto;" />
+A túratávok megoszlása távjuk szerint:
 
-A megoszlásuk: <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turaktav2-1.png" style="display: block; margin: auto;" />
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turaktav1-1.png" style="display: block; margin: auto;" />
+
+A megoszlásuk:
+
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turaktav2-1.png" style="display: block; margin: auto;" />
 
 Összességében itt is az látszik, hogy a túrák jellege meglehetősen stabil maradt az évek alatt, bár egy enyhe előretörése a rövidebb távú túráknak azért érzékelhető.
 
 ### Szint
 
-A túratávok megoszlása szintjük szerint: <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakszint1-1.png" style="display: block; margin: auto;" />
+A túratávok megoszlása szintjük szerint:
 
-A megoszlásuk: <img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakszint2-1.png" style="display: block; margin: auto;" />
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakszint1-1.png" style="display: block; margin: auto;" />
+
+A megoszlásuk:
+
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakszint2-1.png" style="display: block; margin: auto;" />
 
 Itt – ismét csak – meglehetősen stabil összetételt látunk.
 
