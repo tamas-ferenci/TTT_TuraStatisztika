@@ -89,11 +89,15 @@ Résztvevők száma alatt most az indulók számát értem (a teljesítők szám
 
 Így néz ki az indulók száma éves bontásban:
 
-<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/indulokszama1-1.png" style="display: block; margin: auto;" /> A fejlődés összességében itt is látható, ám jóval kevésbé töretlen mint a túrák vagy távok számát tekintve.
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/indulokszama1-1.png" style="display: block; margin: auto;" />
+
+A fejlődés összességében itt is látható, ám jóval kevésbé töretlen mint a túrák vagy távok számát tekintve.
 
 A szezonális mintázat:
 
-<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/indulokszama2-1.png" style="display: block; margin: auto;" /> Érdekes, hogy a ,,kétpúpú’’ mintázat itt is pontosan ugyanúgy megjelenik, ám eltérő súllyal: a májusi csúcs jóval több túrázót vonz mint az őszi. Megfigyelhető még egy, jóval kisebb csúcs január végén is. (A nyilvánvaló magyarázat, hogy egyes népszerű túrákat mindig az év ugyanazon vagy hasonló időpontjában rendezik meg, amik a túrák számát lehet, hogy csak 1-gyel növelik, de a résztvevők számát nagyon is sokkal.)
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/indulokszama2-1.png" style="display: block; margin: auto;" />
+
+Érdekes, hogy a ,,kétpúpú’’ mintázat itt is pontosan ugyanúgy megjelenik, ám eltérő súllyal: a májusi csúcs jóval több túrázót vonz mint az őszi. Megfigyelhető még egy, jóval kisebb csúcs január végén is. (A nyilvánvaló magyarázat, hogy egyes népszerű túrákat mindig az év ugyanazon vagy hasonló időpontjában rendezik meg, amik a túrák számát lehet, hogy csak 1-gyel növelik, de a résztvevők számát nagyon is sokkal.)
 
 Túrák, túratávok jellege
 ------------------------
@@ -114,7 +118,9 @@ Jól látszik, hogy a résztáv szerint összetétel meglehetősen stabil maradt
 
 A túratávok számának változása az indulók száma szerint (kategorizálva ezt):
 
-<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakindulokszama1-1.png" style="display: block; margin: auto;" /> (Az oszlopok magassága azért nem egyezik a túratávok számánál látottal, mert nem minden túratávra volt megadva az indulók száma – ezek itt értelemszerűen hiányoznak, de abban a kimutatásban szerepeltek.)
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakindulokszama1-1.png" style="display: block; margin: auto;" />
+
+(Az oszlopok magassága azért nem egyezik a túratávok számánál látottal, mert nem minden túratávra volt megadva az indulók száma – ezek itt értelemszerűen hiányoznak, de abban a kimutatásban szerepeltek.)
 
 Megint csak az összetétel az érdekesebb most számunkra:
 
@@ -124,7 +130,9 @@ Itt is megállapíthatjuk, hogy a túrák jellege ebből a szempontból is álla
 
 A fenti ábrákkal szemben felhozható az a kifogás, hogy a résztvevők számát – ami a valóságban egy folytonos változó – kategorizáltuk, ami információvesztéssel jár. Helyesebb tehát, ha boxplot-ot használunk (az áttekinthetőség kedvéért a függőleges tengelyen logaritmikus skálázással):
 
-<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakindulokszama3-1.png" style="display: block; margin: auto;" /> Látható, hogy a konklúzió ugyanaz (a továbbiakban, a közérthetőség miatt, inkább az előbbi típusú ábrázolást fogom használni).
+<img src="TTT_TuraNaptarFejlodese_Report_files/figure-markdown_github/turakindulokszama3-1.png" style="display: block; margin: auto;" />
+
+Látható, hogy a konklúzió ugyanaz (a továbbiakban, a közérthetőség miatt, inkább az előbbi típusú ábrázolást fogom használni).
 
 ### Táv
 

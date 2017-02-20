@@ -151,6 +151,7 @@ Résztvevők száma alatt most az indulók számát értem (a teljesítők szám
 ```{r indulokszama1}
 barchart( tapply( RawData$Indulók, RawData$Ev, sum, na.rm = TRUE ), horizontal = FALSE, ylab = "Résztvevők száma [fő]", xlab = "Év" )
 ```
+
 A fejlődés összességében itt is látható, ám jóval kevésbé töretlen mint a túrák vagy távok számát tekintve.
 
 A szezonális mintázat:
@@ -171,6 +172,7 @@ xyplot( Freq ~ Var2, groups = Var1, data = temp, type = "l", ylab = "Résztvevő
         scales = list( x = list( at = seq( 0, 52, 4 ) ) ) ) +
   as.layer( xyplot( Freq/length( unique( RawData$Ev ) ) ~ Var1, data = temp2, type = "l", lwd = 4 ) )
 ```
+
 Érdekes, hogy a ,,kétpúpú'' mintázat itt is pontosan ugyanúgy megjelenik, ám eltérő súllyal: a májusi csúcs jóval több túrázót vonz mint az őszi. Megfigyelhető még egy, jóval kisebb csúcs január végén is. (A nyilvánvaló magyarázat, hogy egyes népszerű túrákat mindig az év ugyanazon vagy hasonló időpontjában rendezik meg, amik a túrák számát lehet, hogy csak 1-gyel növelik, de a résztvevők számát nagyon is sokkal.)
 
 ## Túrák, túratávok jellege
@@ -203,6 +205,7 @@ barchart( xtabs( ~Ev + cut( Indulók, c( 0, 100, 300, 500, 1000, Inf ), c( "<=10
           horizontal = FALSE, auto.key = list( columns = 3 ), ylab = "Túratávok száma [db]", xlab = "Év" )
 
 ```
+
 (Az oszlopok magassága azért nem egyezik a túratávok számánál látottal, mert nem minden túratávra volt megadva az indulók száma -- ezek itt értelemszerűen hiányoznak, de abban a kimutatásban szerepeltek.)
 
 Megint csak az összetétel az érdekesebb most számunkra:
@@ -220,6 +223,7 @@ A fenti ábrákkal szemben felhozható az a kifogás, hogy a résztvevők szám�
 bwplot( Indulók~as.factor( Ev ), data = RawData, scales = list( y = list( log = 10, labels = 10^(0:3), at = 10^(0:3) ) ), horizontal = FALSE,
         xlab = "Év", ylab = "Indulók száma [fő]" )
 ```
+
 Látható, hogy a konklúzió ugyanaz (a továbbiakban, a közérthetőség miatt, inkább az előbbi típusú ábrázolást fogom használni).
 
 ### Táv
